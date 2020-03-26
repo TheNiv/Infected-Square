@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,23 +7,30 @@ public class Projectiles : MonoBehaviour
     public float speed;
     private Vector2 screenBounds;
     private Rigidbody2D rb;
-    
-    
+    private Vector2 direction;
+
+
     void Start()
     {   
+       //transform.position += transform.right * speed * Time.deltaTime;
         rb = this.GetComponent<Rigidbody2D>();
-        rb.velocity = new Vector2(speed, 0);
+        Vector3 mousePos = Input.mousePosition;  //getting the mouse position.
+        mousePos = Camera.main.ScreenToWorldPoint(mousePos);  //trasnforming the mouse position to a point in the world.
+        direction = new Vector2(mousePos.x, mousePos.y);  //getting the point direction.
+        
+        
+        Ray2D ray = new Ray2D(this.transform.position, direction);  //the ray of the projectile target
+        rb.velocity =  speed * new Vector2(ray.direction.x, ray.direction.y); //setting the projectile movement direction
+        Debug.Log(ray.direction);
+
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
-        Debug.Log(screenBounds.x);
-        Debug.Log(screenBounds.y);
     }
+
 
     // Update is called once per frame
     void Update()
     {
-        //transform.position += transform.right * speed * Time.deltaTime;
-        
-        if(this.transform.position.x > screenBounds.x)
+        if (this.transform.position.x > screenBounds.x || this.transform.position.x < screenBounds.x *-1) //making sure the object does not pass the edge of the screen
         {
             Destroy(this.gameObject);
         }
