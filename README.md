@@ -1,2 +1,2 @@
 # Infected-Square
-All of Infected Square's files.
+All of Stuck in a room's assests files.
